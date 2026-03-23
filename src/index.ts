@@ -2,7 +2,7 @@
 
 import { Command } from "commander";
 import chalk from "chalk";
-import { searchMovies } from "./api/tmdb";
+import { getTrendingMovies, searchMovies } from "./api/tmdb";
 
 const program = new Command();
 
@@ -37,6 +37,35 @@ program
       });
     } catch {
       console.error(chalk.red("Error fetching movies"));
+    }
+  });
+
+program
+  .command("trending")
+  .description("Get trending movies")
+  .action(async () => {
+    try {
+      const movies = await getTrendingMovies();
+
+      if (!movies.length) {
+        console.log(chalk.yellow("No trending movies found"));
+        return;
+      }
+
+      movies.slice(0, 5).forEach((movie: any, index: number) => {
+        const title = chalk.cyan.bold(movie.title);
+        const year = movie.release_date
+          ? movie.release_date.split("-")[0]
+          : "N/A";
+        const rating = chalk.green(movie.vote_average?.toString() || "N/A");
+        const date = chalk.gray(movie.release_date || "N/A");
+
+        console.log(`${chalk.magenta(`\n#${index + 1}`)} 🔥 ${title} (${year})`);
+        console.log(`⭐ Rating: ${rating}`);
+        console.log(`📅 Release: ${date}`);
+      });
+    } catch {
+      console.error(chalk.red("Error fetching trending movies"));
     }
   });
 

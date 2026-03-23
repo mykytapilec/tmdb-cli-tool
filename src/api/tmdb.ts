@@ -15,3 +15,8 @@ export const searchMovies = async (query: string) => {
 
   return response.data.results;
 };
+
+export const getTrendingMovies = async () => {
+  const response = await api.get("/trending/movie/day");
+  return response.data.results;
+};
