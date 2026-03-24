@@ -20,3 +20,8 @@ export const getTrendingMovies = async () => {
   const response = await api.get("/trending/movie/day");
   return response.data.results;
 };
+
+export const getMovieDetails = async (id: string) => {
+  const response = await api.get(`/movie/${id}`);
+  return response.data;
+};

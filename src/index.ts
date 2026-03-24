@@ -2,7 +2,7 @@
 
 import { Command } from "commander";
 import chalk from "chalk";
-import { getTrendingMovies, searchMovies } from "./api/tmdb";
+import { getMovieDetails, getTrendingMovies, searchMovies } from "./api/tmdb";
 
 const program = new Command();
 
@@ -66,6 +66,32 @@ program
       });
     } catch {
       console.error(chalk.red("Error fetching trending movies"));
+    }
+  });
+
+program
+  .command("movie <id>")
+  .description("Get movie details by ID")
+  .action(async (id) => {
+    try {
+      const movie = await getMovieDetails(id);
+
+      const title = chalk.cyan.bold(movie.title);
+      const year = movie.release_date
+        ? movie.release_date.split("-")[0]
+        : "N/A";
+      const rating = chalk.green(movie.vote_average?.toString() || "N/A");
+      const date = chalk.gray(movie.release_date || "N/A");
+      const overview = movie.overview || "No description available";
+      const language = movie.original_language?.toUpperCase() || "N/A";
+
+      console.log(`\n🎬 ${title} (${year})`);
+      console.log(`⭐ Rating: ${rating}`);
+      console.log(`📅 Release: ${date}`);
+      console.log(`🌍 Language: ${language}`);
+      console.log(`\n📝 Overview:\n${overview}`);
+    } catch {
+      console.error(chalk.red("Error fetching movie details"));
     }
   });
 
