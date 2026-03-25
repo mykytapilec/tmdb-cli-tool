@@ -2,7 +2,8 @@
 
 import { Command } from "commander";
 import chalk from "chalk";
-import { getMovieDetails, getTrendingMovies, searchMovies } from "./api/tmdb";
+import { searchMovies, getTrendingMovies, getMovieDetails } from "./api/tmdb";
+import { handleError } from "./utils/handleError";
 
 const program = new Command();
 
@@ -25,9 +26,7 @@ program
 
       movies.slice(0, 5).forEach((movie: any, index: number) => {
         const title = chalk.cyan.bold(movie.title);
-        const year = movie.release_date
-          ? movie.release_date.split("-")[0]
-          : "N/A";
+        const year = movie.release_date ? movie.release_date.split("-")[0] : "N/A";
         const rating = chalk.green(movie.vote_average?.toString() || "N/A");
         const date = chalk.gray(movie.release_date || "N/A");
 
@@ -35,8 +34,8 @@ program
         console.log(`⭐ Rating: ${rating}`);
         console.log(`📅 Release: ${date}`);
       });
-    } catch {
-      console.error(chalk.red("Error fetching movies"));
+    } catch (error) {
+      handleError(error);
     }
   });
 
@@ -54,9 +53,7 @@ program
 
       movies.slice(0, 5).forEach((movie: any, index: number) => {
         const title = chalk.cyan.bold(movie.title);
-        const year = movie.release_date
-          ? movie.release_date.split("-")[0]
-          : "N/A";
+        const year = movie.release_date ? movie.release_date.split("-")[0] : "N/A";
         const rating = chalk.green(movie.vote_average?.toString() || "N/A");
         const date = chalk.gray(movie.release_date || "N/A");
 
@@ -64,8 +61,8 @@ program
         console.log(`⭐ Rating: ${rating}`);
         console.log(`📅 Release: ${date}`);
       });
-    } catch {
-      console.error(chalk.red("Error fetching trending movies"));
+    } catch (error) {
+      handleError(error);
     }
   });
 
@@ -77,9 +74,7 @@ program
       const movie = await getMovieDetails(id);
 
       const title = chalk.cyan.bold(movie.title);
-      const year = movie.release_date
-        ? movie.release_date.split("-")[0]
-        : "N/A";
+      const year = movie.release_date ? movie.release_date.split("-")[0] : "N/A";
       const rating = chalk.green(movie.vote_average?.toString() || "N/A");
       const date = chalk.gray(movie.release_date || "N/A");
       const overview = movie.overview || "No description available";
@@ -90,8 +85,8 @@ program
       console.log(`📅 Release: ${date}`);
       console.log(`🌍 Language: ${language}`);
       console.log(`\n📝 Overview:\n${overview}`);
-    } catch {
-      console.error(chalk.red("Error fetching movie details"));
+    } catch (error) {
+      handleError(error);
     }
   });
 
